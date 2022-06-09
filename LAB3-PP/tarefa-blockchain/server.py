@@ -9,11 +9,14 @@ def oi(tdata):
 
 def on_message(client, userdata, message):
     print(message.payload.decode("utf-8"))
-    dcd_msg = message.payload.decode("utf-8").split("/")
-    print(dcd_msg)
+    processes = []
+    tdata = {"id": 1}
+    p = multiprocessing.Process(target=oi, args=(tdata))
+    processes.append(p)
+    p.start()
 
-# mqttBroker = '127.0.0.1'
-mqttBroker = 'broker.emqx.io'
+mqttBroker = '127.0.0.1'
+# mqttBroker = 'broker.emqx.io'
 
 client = mqtt.Client("Node_1")
 client.connect(mqttBroker)
@@ -22,7 +25,7 @@ client.loop_start()
 
 listaDesafios = [desafios.Challenge(0, 1)]
 
-client.publish("ppd/challenge", listaDesafios[-1].encode_challenge(), qos=1)
+client.publish("ppd/challenge", listaDesafios[-1].encode_challenge())
 
 print("Just published ", 
         listaDesafios[-1].encode_challenge(), 
